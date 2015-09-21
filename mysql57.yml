@@ -1,0 +1,10 @@
+- hosts: all
+  sudo: yes
+  tasks:
+    - get_url: url=http://repo.mysql.com/RPM-GPG-KEY-mysql dest=/tmp/RPM-GPG-KEY-mysql
+    - shell: apt-key add /tmp/RPM-GPG-KEY-mysql
+    - apt_repository: repo='deb http://repo.mysql.com/apt/ubuntu/ trusty mysql-apt-config' state=present
+    - apt_repository: repo='deb http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.7-dmr' state=present
+    - apt: pkg=mysql-server update_cache=yes
+    - copy: src=compatibility56.cnf dest=/etc/mysql/conf.d/
+    - service: name=mysql state=restarted enabled=yes
